@@ -4,7 +4,7 @@ title: '#4471 · three problems, not one'
 owner: support desk
 status: open
 reviewed: 2026-10-29
-signature: Patryk Matychniak
+signature: v1.eyJzdWIiOiIzMzMyIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMyNjQxOTIsImV4cCI6MTc5MzM1MDU5Mn0.2Ig_WXknmdS2VCjL2yJmKNex6suyl5-cYWIxHNjS-ys
 ---
 
 <script>
