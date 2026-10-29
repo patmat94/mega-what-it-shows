@@ -1,0 +1,71 @@
+---
+layout: runbook
+title: '#4471 · three problems, not one'
+owner: support desk
+status: open
+reviewed: 2026-10-29
+signature: Patryk Matychniak
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const repo = 'https://github.com/patmat94/mega-what-it-shows/issues';
+</script>
+
+[#4471](/kb/incidents/4471) is marked known: one issue, one fix queued. The reports merged into it
+describe three different problems. One fix for the parser leaves two of them open.
+
+<Callout kind="warn">
+Not one issue. Three tickets, one per problem. Each needs its own fix and its own owner.
+</Callout>
+
+## What was merged
+
+<ProblemTable ticket={4471} issues={{ parser: `${repo}/1`, hint: `${repo}/2`, 'one-day': `${repo}/3` }} />
+
+The counts come from the same data and the same rules as the desk's own table below: one report per
+id, cause by tenant (`causes.ts`), and the one-day moves the desk already listed in `desk-notes.json`.
+
+## The three problems
+
+### `parser`: day and month swapped
+
+The shared parser reads every date month first. Every tenant on file writes the day first, so
+`7 April` goes out as `4 July`. Reports come in by app, email and form from every tenant.
+Fixing the parser fixes these, and only these.
+
+### `hint`: the booking-v3 form asks for the wrong order
+
+On tenants running booking-v3, the form prints `MM/DD/YYYY` under its date field. People type
+what the hint tells them, month first, and the form reads it the tenant's way, day first. The
+date comes out swapped just like `parser`, which is why it was merged. But a parser fix does not
+touch it: the form hint has to match the tenant's locale. Only form reports from booking-v3 tenants
+land here.
+
+### `one-day`: the invite lands one day off
+
+These are not swaps. "Tuesday 12 May" arrives as "Monday 11 May"; the same meeting shows Tuesday
+in Lisbon and Monday in Toronto; an invite arrives before its booking was made. That is a time
+zone shift, not a date format. The desk noticed them (`desk-notes.json`) but `CauseTable` files
+them under `parser` by tenant, so they would stay broken after the parser fix.
+
+## How they got merged
+
+[Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges on subject line alone, and
+[triage](/kb/triage/dedupe) says "when unsure, merge". All three problems produce the same
+subjects ("Wrong day on the invite", "Month and day swapped?"), so they merged into one ticket.
+Intake's tag is no better: it guesses from the reporter's browser, not the tenant, and disagrees
+with the cause on many reports (see "tagged as" above).
+
+Merging on subject needs a new decision record that replaces 0001. Until then: before merging into
+a big ticket, check the cause, not the subject.
+
+## The desk's view, for comparison
+
+<CauseTable ticket={4471} />
+
+<RenderStamp {signature} />
